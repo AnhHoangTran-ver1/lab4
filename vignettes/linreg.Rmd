@@ -1,0 +1,65 @@
+---
+title: "linreg"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{linreg}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(lab4)
+```
+
+## Introduction
+
+This package fits multiple linear regression models with `linreg()`,
+using ordinary least squares. Here we use the `iris` dataset.
+
+## Fitting a model
+
+```{r}
+mod <- linreg(Petal.Length ~ Species, data = iris)
+```
+
+## Methods
+
+`print()` shows the call and the coefficients:
+
+```{r}
+print(mod)
+```
+
+`coef()` returns the coefficients as a named vector:
+
+```{r}
+coef(mod)
+```
+
+`resid()` returns the residuals and `pred()` the predicted values
+(first six shown):
+
+```{r}
+head(resid(mod))
+head(pred(mod))
+```
+
+`summary()` shows the standard errors, t-values, p-values, the residual
+standard error and the degrees of freedom:
+
+```{r}
+summary(mod)
+```
+
+`plot()` draws Residuals vs Fitted and Scale-Location:
+
+```{r, fig.height = 4, fig.width = 6}
+plot(mod)
+```
