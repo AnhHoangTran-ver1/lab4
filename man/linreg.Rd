@@ -18,6 +18,3 @@ values, residuals, degrees of freedom, variances, t-values and p-values).
 \description{
 Defining the linreg class
 }
-\references{
-\url{https://en.wikipedia.org/wiki/Ordinary_least_squares}
-}

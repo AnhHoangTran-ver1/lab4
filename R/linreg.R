@@ -5,8 +5,6 @@
 #' @return An object of class "linreg" (a list with the coefficients, fitted
 #'   values, residuals, degrees of freedom, variances, t-values and p-values).
 #'
-#' @references \url{https://en.wikipedia.org/wiki/Ordinary_least_squares}
-#'
 #' @importFrom stats model.matrix pt
 #' @export
 linreg <- function(formula, data) {

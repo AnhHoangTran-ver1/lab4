@@ -8,7 +8,6 @@ print.linreg <- function(x, ...) {
   print(x$call)
   cat("\nCoefficients:\n")
   print.default(format(x$coefficients, digits = 3), print.gap = 2, quote = FALSE)
-  invisible(x)
 }
 
 #print.linreg(mod_object)
@@ -19,7 +18,6 @@ print.linreg <- function(x, ...) {
 #' @param x An object of class "linreg".
 #' @param ... Not used.
 #' @return The two plots, invisibly, as a list.
-#' @references \url{https://en.wikipedia.org/wiki/Errors_and_residuals}
 #' @importFrom stats median
 #' @importFrom rlang .data
 #' @export
@@ -53,7 +51,6 @@ plot.linreg <- function(x, ...) {
   
   print(p1)
   print(p2)
-  invisible(list(p1, p2))
 }
 
 #plot.linreg(mod_object)
@@ -89,6 +86,7 @@ coef.linreg <- function(object, ...) {
 
 
 #' Predicted values
+#' 
 #' Generic function that returns the predicted values.
 #'
 #' @param x An object.
@@ -114,7 +112,6 @@ pred.linreg <- function(x, ...) {
 #' @param object An object of class "linreg".
 #' @param ... Not used.
 #' @return The object, invisibly.
-#' @references \url{https://en.wikipedia.org/wiki/T-statistic}
 #' @importFrom stats printCoefmat
 #' @export
 summary.linreg <- function(object, ...) {
@@ -124,17 +121,15 @@ summary.linreg <- function(object, ...) {
     Estimate     = object$coefficients,
     `Std. Error` = se,
     `t value`    = object$t_values,
-    `Pr(>|t|)`   = object$p_values
+    `p value`   = object$p_values
   )
   
   cat("Call:\n")
   print(object$call)
   cat("\nCoefficients:\n")
-  printCoefmat(coef_table, digits = 4)
+  printCoefmat(coef_table, digits = 4, print.gap = 3, has.Pvalue = TRUE)
   cat("\nResidual standard error:", format(sqrt(object$sigma2), digits = 4),
       "on", object$df, "degrees of freedom\n")
-  
-  invisible(object)
 }
 
 #summary.linreg(mod_object)

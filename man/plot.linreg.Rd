@@ -17,6 +17,3 @@ The two plots, invisibly, as a list.
 \description{
 plot function
 }
-\references{
-\url{https://en.wikipedia.org/wiki/Errors_and_residuals}
-}

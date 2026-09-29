@@ -17,6 +17,3 @@ The object, invisibly.
 \description{
 summary
 }
-\references{
-\url{https://en.wikipedia.org/wiki/T-statistic}
-}
