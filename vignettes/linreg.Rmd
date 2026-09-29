@@ -60,6 +60,6 @@ summary(mod)
 
 `plot()` draws Residuals vs Fitted and Scale-Location:
 
-```{r, fig.height = 4, fig.width = 6}
+```{r, fig.height = 5, fig.width = 6}
 plot(mod)
 ```

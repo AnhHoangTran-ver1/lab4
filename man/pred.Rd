@@ -2,7 +2,8 @@
 % Please edit documentation in R/methods.R
 \name{pred}
 \alias{pred}
-\title{pred() should return the predicted values yˆ}
+\title{Predicted values
+Generic function that returns the predicted values.}
 \usage{
 pred(x, ...)
 }
@@ -11,6 +12,10 @@ pred(x, ...)
 
 \item{...}{Further arguments passed to methods.}
 }
+\value{
+The predicted values.
+}
 \description{
-pred() should return the predicted values yˆ
+Predicted values
+Generic function that returns the predicted values.
 }
