@@ -84,19 +84,20 @@ coef.linreg <- function(object, ...) {
 
 
 
-
-
-#' pred() should return the predicted values yˆ
-#' @param x An object.
-#' @param ... Further arguments passed to methods.
-#' @export
-pred <- function(x, ...) UseMethod("pred")
+#' Predicted values
+#'
+#' Returns the predicted values \eqn{\hat{y}} of a fitted model.
+#'
 #' @param x An object of class "linreg".
-#' @param ... Not used.
+#' @param ... Further arguments passed to methods (not used).
 #' @return A vector of predicted values.
 #' @export
+pred <- function(x, ...) UseMethod("pred")
+
+#' @rdname pred
+#' @export
 pred.linreg <- function(x, ...) {
-  x$fitted
+  as.vector(x[["fitted"]])
 }
 
 #pred.linreg(mod_object)
