@@ -38,6 +38,7 @@ plot.linreg <- function(x, ...) {
     ggplot2::stat_summary(fun = median, geom = "line", colour = "red") +
     ggplot2::geom_hline(yintercept = 0, linetype = "dotted", colour = "grey") +
     ggplot2::geom_text(data = top3, ggplot2::aes(label = .data$id), vjust = -0.5) +
+    ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0.05, 0.15))) +
     ggplot2::labs(title = "Residuals vs Fitted", x = xlab, y = "Residuals") +
     ggplot2::theme_bw()
   
@@ -45,6 +46,7 @@ plot.linreg <- function(x, ...) {
     ggplot2::geom_point(shape = 1, size = 3) +
     ggplot2::stat_summary(fun = median, geom = "line", colour = "red") +
     ggplot2::geom_text(data = top3, ggplot2::aes(label = .data$id), vjust = -0.5) +
+    ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0.05, 0.15))) +
     ggplot2::labs(title = "Scale-Location", x = xlab,
                   y = expression(sqrt("|Standardized residuals|"))) +
     ggplot2::theme_bw()
@@ -84,20 +86,24 @@ coef.linreg <- function(object, ...) {
 
 
 
+
+
 #' Predicted values
+#' Generic function that returns the predicted values.
 #'
-#' Returns the predicted values \eqn{\hat{y}} of a fitted model.
-#'
-#' @param x An object of class "linreg".
-#' @param ... Further arguments passed to methods (not used).
-#' @return A vector of predicted values.
+#' @param x An object.
+#' @param ... Further arguments passed to methods.
+#' @return The predicted values.
 #' @export
 pred <- function(x, ...) UseMethod("pred")
 
-#' @rdname pred
+#' Predicted values of a linreg object
+#' @param x An object of class "linreg".
+#' @param ... Not used.
+#' @return A vector of predicted values.
 #' @export
 pred.linreg <- function(x, ...) {
-  as.vector(x[["fitted"]])
+  x$fitted
 }
 
 #pred.linreg(mod_object)

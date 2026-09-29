@@ -2,21 +2,20 @@
 % Please edit documentation in R/methods.R
 \name{pred}
 \alias{pred}
-\alias{pred.linreg}
-\title{Predicted values}
+\title{Predicted values
+Generic function that returns the predicted values.}
 \usage{
 pred(x, ...)
-
-\method{pred}{linreg}(x, ...)
 }
 \arguments{
-\item{x}{An object of class "linreg".}
+\item{x}{An object.}
 
-\item{...}{Further arguments passed to methods (not used).}
+\item{...}{Further arguments passed to methods.}
 }
 \value{
-A vector of predicted values.
+The predicted values.
 }
 \description{
-Returns the predicted values \eqn{\hat{y}} of a fitted model.
+Predicted values
+Generic function that returns the predicted values.
 }
