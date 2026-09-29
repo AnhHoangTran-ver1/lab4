@@ -7,7 +7,13 @@ S3method(print,linreg)
 S3method(residuals,linreg)
 S3method(summary,linreg)
 export(linreg)
+export(liu_base)
+export(liu_comp)
+export(liu_palette)
 export(pred)
+export(scale_colour_liu)
+export(theme_liu)
+import(ggplot2)
 importFrom(rlang,.data)
 importFrom(stats,
   median,
