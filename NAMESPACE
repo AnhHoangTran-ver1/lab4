@@ -2,11 +2,12 @@
 
 S3method(coef,linreg)
 S3method(plot,linreg)
+S3method(pred,linreg)
 S3method(print,linreg)
 S3method(residuals,linreg)
 S3method(summary,linreg)
 export(linreg)
-export(pred.linreg)
+export(pred)
 importFrom(rlang,.data)
 importFrom(stats,
   median,

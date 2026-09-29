@@ -84,11 +84,16 @@ coef.linreg <- function(object, ...) {
 
 
 
-#pred <- function(x, ...) UseMethod("pred")
+
 
 #' pred() should return the predicted values yˆ
 #' @param x An object.
 #' @param ... Further arguments passed to methods.
+#' @export
+pred <- function(x, ...) UseMethod("pred")
+#' @param x An object of class "linreg".
+#' @param ... Not used.
+#' @return A vector of predicted values.
 #' @export
 pred.linreg <- function(x, ...) {
   x$fitted
@@ -112,7 +117,7 @@ summary.linreg <- function(object, ...) {
     Estimate     = object$coefficients,
     `Std. Error` = se,
     `t value`    = object$t_values,
-    `p value`   = object$p_values
+    `Pr(>|t|)`   = object$p_values
   )
   
   cat("Call:\n")
