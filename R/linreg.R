@@ -7,7 +7,7 @@
 #'
 #' @importFrom stats model.matrix pt
 #' @export
-linreg <- function(formula, data) {
+linreg <- function(formula, data) { #Petal.Length ~ Species, iris
   X <- model.matrix(formula, data) 
   y_name <- all.vars(formula)[1]
   y <- data[[y_name]]
@@ -25,7 +25,7 @@ linreg <- function(formula, data) {
   residual_variance <- sum(residuals^2) / degrees_of_freedom
   variance_of_coefficients <- residual_variance * solve(t(X) %*% X)
   t_values <- coefficients / sqrt(diag(variance_of_coefficients))
-  p_values <- 2 * pt(abs(t_values), degrees_of_freedom, lower.tail = FALSE)
+  p_values <- 2 * pt(abs(t_values), degrees_of_freedom, lower.tail = FALSE) #2-tails p value
   
   result <- list(
     coefficients = coefficients,

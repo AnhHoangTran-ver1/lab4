@@ -39,6 +39,7 @@ plot.linreg <- function(x, ...) {
     ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0.05, 0.15))) +
     ggplot2::labs(title = "Residuals vs Fitted", x = xlab, y = "Residuals") +
     ggplot2::theme_bw()
+    #theme_liu()
   
   p2 <- ggplot2::ggplot(d, ggplot2::aes(x = .data$fitted, y = .data$std_resid)) +
     ggplot2::geom_point(shape = 1, size = 3) +
@@ -48,12 +49,15 @@ plot.linreg <- function(x, ...) {
     ggplot2::labs(title = "Scale-Location", x = xlab,
                   y = expression(sqrt("|Standardized residuals|"))) +
     ggplot2::theme_bw()
+    #theme_liu()
   
   print(p1)
   print(p2)
 }
 
-#plot.linreg(mod_object)
+data(iris)
+mod_object <- linreg(Petal.Length~Species, data = iris)
+plot.linreg(mod_object)
 
 
 
