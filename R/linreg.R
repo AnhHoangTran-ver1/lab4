@@ -9,6 +9,8 @@
 #' @export
 linreg <- function(formula, data) { #Petal.Length ~ Species, iris
   X <- model.matrix(formula, data) 
+  X_qr <- qr(X)
+  
   y_name <- all.vars(formula)[1]
   y <- data[[y_name]]
   
@@ -17,13 +19,15 @@ linreg <- function(formula, data) { #Petal.Length ~ Species, iris
   
   #calculations
   #coefficients <- solve(t(X) %*% X) %*% t(X) %*% y
-  coefficients <- drop(solve(t(X) %*% X) %*% t(X) %*% y)
+  #coefficients <- drop(solve(t(X) %*% X) %*% t(X) %*% y)
+  coefficients <- qr.coef(X_qr, y)
   names(coefficients) <- colnames(X)
   fitted <- X %*% coefficients
   residuals <- y - fitted
   degrees_of_freedom <- n - p
   residual_variance <- sum(residuals^2) / degrees_of_freedom
-  variance_of_coefficients <- residual_variance * solve(t(X) %*% X)
+  #variance_of_coefficients <- residual_variance * solve(t(X) %*% X)
+  variance_of_coefficients <- chol2inv(X_qr$qr, p) * residual_variance
   t_values <- coefficients / sqrt(diag(variance_of_coefficients))
   p_values <- 2 * pt(abs(t_values), degrees_of_freedom, lower.tail = FALSE) #2-tails p value
   
@@ -44,6 +48,6 @@ linreg <- function(formula, data) { #Petal.Length ~ Species, iris
   result
 }
 
-#data(iris)
-#mod_object <- linreg(Petal.Length~Species, data = iris)
+data(iris)
+mod_object <- linreg(Petal.Length~Species, data = iris)
 
