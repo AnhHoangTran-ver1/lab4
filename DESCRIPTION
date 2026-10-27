@@ -1,9 +1,10 @@
 Package: lab4
 Title: Linear Regression and theme() for Linköping University
 Version: 0.0.0.9000
-Authors@R: 
-    person("Anh", "Tran", , "anhtr209@student.liu.se", role = c("aut", "cre")) 
-    person("Tatevik", "Hakobyan", , "tatha821@student.liu.se", role = c("aut", "cre"))
+Authors@R: c(
+    person("Anh", "Tran", , "anhtr209@student.liu.se", role = c("aut", "cre")),
+    person("Tatevik", "Hakobyan", , "tatha821@student.liu.se", role = "aut")
+    )
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
 Encoding: UTF-8
