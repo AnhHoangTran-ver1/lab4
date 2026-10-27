@@ -13,7 +13,7 @@ visualize_airport_delays <- function() {
   ggplot2::ggplot(delays, ggplot2::aes(x = .data$lon, y = .data$lat,
                                        color = .data$mean_delay)) +
     ggplot2::geom_point(size = 2) +
-    ggplot2::scale_color_gradient2(low = "blue", mid = "grey", high = "red") +
+    ggplot2::scale_color_gradient2(low = "green", mid = "yellow", high = "red") +
     ggplot2::labs(x = "Longitude", y = "Latitude", color = "Mean delay (min)",
                   title = "Mean arrival delay by destination airport")
 }
