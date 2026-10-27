@@ -48,6 +48,6 @@ linreg <- function(formula, data) { #Petal.Length ~ Species, iris
   result
 }
 
-data(iris)
-mod_object <- linreg(Petal.Length~Species, data = iris)
+# data(iris)
+# mod_object <- linreg(Petal.Length~Species, data = iris)
 
