@@ -1,0 +1,141 @@
+---
+title: "ridgereg"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ridgereg}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library(lab4)
+library(caret)
+library(mlbench)
+```
+
+## 1. The train/test split of the BostonHousing data
+
+The data are split into a training set (80%) and a test set (20%) using
+`caret::createDataPartition()`.
+
+```{r split}
+data("BostonHousing", package = "mlbench")
+set.seed(2026)
+idx   <- createDataPartition(BostonHousing$medv, p = 0.8, list = FALSE)
+train <- BostonHousing[idx, ]
+test  <- BostonHousing[-idx, ]
+c(train = nrow(train), test = nrow(test))
+```
+
+All models use `medv` (median house value) as the response and 10-fold
+cross-validation on the training set.
+
+```{r ctrl}
+ctrl <- trainControl(method = "cv", number = 10)
+```
+
+## 2. Linear regression and forward selection
+
+First, an ordinary linear regression using all covariates, evaluated with
+10-fold cross-validation on the training set.
+
+```{r lm}
+lm_fit <- train(medv ~ ., data = train, method = "lm", trControl = ctrl)
+lm_fit
+```
+
+Forward selection is done with `leapForward`. By default caret tries only a
+few values of `nvmax`, so the tuning grid is set to every size from 1 to 13
+covariates. `BostonHousing` has 14 columns, one of which is the response
+`medv`, so there are 13 predictors (`chas` becomes the dummy `chas1`).
+Because `leapForward` cannot fit zero covariates, the intercept-only model is
+fitted separately with `method = "null"`, so that all sizes from 0 to 13 are
+compared.
+
+```{r fwd}
+fwd_fit <- train(medv ~ ., data = train, method = "leapForward",
+                 tuneGrid = data.frame(nvmax = 1:13), trControl = ctrl)
+
+null_fit <- train(medv ~ ., data = train, method = "null", trControl = ctrl)
+
+fwd_tab <- rbind(
+  data.frame(nvmax = 0, RMSE = null_fit$results$RMSE),
+  fwd_fit$results[, c("nvmax", "RMSE")]
+)
+fwd_tab
+fwd_fit$bestTune
+summary(fwd_fit$finalModel)$outmat[fwd_fit$bestTune$nvmax, ]
+```
+
+The table shows that all model sizes from 0 to 13 were evaluated. Forward
+selection chose `nvmax = X` covariates, with a cross-validated RMSE of Y,
+compared with Z for the full linear regression. The variables left out are ...
+
+## 3. Evaluating the performance on the training set
+
+```{r train-perf}
+train_perf <- rbind(
+  lm      = postResample(predict(lm_fit,  train), train$medv),
+  forward = postResample(predict(fwd_fit, train), train$medv)
+)
+train_perf
+```
+
+## 4. Ridge regression with `ridgereg()` as a custom caret model
+
+```{r ridge-method}
+ridge_method <- list(
+  label = "ridgereg", library = "lab4", type = "Regression",
+  parameters = data.frame(parameter = "lambda", class = "numeric",
+                          label = "Lambda"),
+  grid = function(x, y, len = NULL, search = "grid") {
+    data.frame(lambda = 10^seq(-3, 3, length.out = len))
+  },
+  fit = function(x, y, wts, param, lev, last, weights, classProbs, ...) {
+    dat <- as.data.frame(x)
+    dat$.outcome <- y
+    lab4::ridgereg(.outcome ~ ., data = dat, lambda = param$lambda)
+  },
+  predict = function(modelFit, newdata, preProc = NULL, submodels = NULL) {
+    predict(modelFit, as.data.frame(newdata))
+  },
+  prob = NULL,
+  sort = function(x) x[order(-x$lambda), ]
+)
+```
+
+## 5. Choosing lambda with 10-fold cross-validation
+
+The ridge model is trained for 30 values of lambda, log-spaced between 0.001
+and 1000. For each value, 10-fold cross-validation on the training set gives
+an estimate of RMSE, and the lambda with the lowest CV RMSE is selected.
+
+```{r ridge-fit}
+set.seed(2026)
+ridge_fit <- train(medv ~ ., data = train, method = ridge_method,
+                   trControl = ctrl,
+                   tuneGrid = data.frame(lambda = 10^seq(-3, 3, length.out = 30)))
+ridge_fit$bestTune
+ridge_fit$results[, c("lambda", "RMSE", "Rsquared")]
+plot(ridge_fit, scales = list(x = list(log = 10)))
+```
+
+## 6. Evaluation on the test set
+
+```{r test-perf}
+test_perf <- rbind(
+  lm      = postResample(predict(lm_fit,    test), test$medv),
+  forward = postResample(predict(fwd_fit,   test), test$medv),
+  ridge   = postResample(predict(ridge_fit, test), test$medv)
+)
+round(test_perf, 3)
+```
+
+### Concluding comments
+
+On the test set, ridge regression has the lowest RMSE (4.634), followed by forward selection (4.660) and the full linear model (4.665). The differences are tiny (about 0.03, under 1% of the error) and well within the noise for only 99 test observations, so no model is clearly better. The CV results agree: ridge (4.759) and forward selection (4.757) are essentially tied, both only slightly ahead of the linear model (4.804).
+
+Forward selection kept 11 of 13 covariates, dropping only indus and age. Ridge chose λ ≈ 8.5, which is mild shrinkage: with 13 predictors and 407 training observations, ordinary least squares overfits little, so the penalty has little to fix.
+
+Since accuracy does not separate the models, the choice should rest on interpretability. The forward-selected or full linear model is a reasonable pick, with ridge as an alternative if stability under correlated covariates matters more.
