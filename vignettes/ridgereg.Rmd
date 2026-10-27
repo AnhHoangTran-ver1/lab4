@@ -70,7 +70,7 @@ summary(fwd_fit$finalModel)$outmat[fwd_fit$bestTune$nvmax, ]
 
 The table shows that all model sizes from 0 to 13 were evaluated. Forward
 selection chose `nvmax = X` covariates, with a cross-validated RMSE of Y,
-compared with Z for the full linear regression. The variables left out are ...
+compared with Z for the full linear regression.
 
 ## 3. Evaluating the performance on the training set
 
